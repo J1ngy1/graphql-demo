@@ -1,16 +1,22 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { readFileSync } from "fs";
-import { resolvers } from "./graphql/resolvers/post.js";
+
+import { PostAPI } from "./datasources/postAPI.js";
+import { CommentAPI } from "./datasources/commentAPI.js";
+import { postResolvers } from "./graphql/resolvers/post.js";
 import { commentResolvers } from "./graphql/resolvers/comment.js";
 
 const postTypeDefs = readFileSync(
   "./src/graphql/typeDefs/post.graphql",
   "utf-8",
 );
-
 const commentTypeDefs = readFileSync(
   "./src/graphql/typeDefs/comment.graphql",
+  "utf-8",
+);
+const queryTypeDefs = readFileSync(
+  "./src/graphql/typeDefs/query.graphql",
   "utf-8",
 );
 
@@ -80,8 +86,8 @@ const commentTypeDefs = readFileSync(
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
 const server = new ApolloServer({
-  typeDefs: [postTypeDefs, commentTypeDefs],
-  resolvers: [resolvers, commentResolvers],
+  typeDefs: [queryTypeDefs, postTypeDefs, commentTypeDefs],
+  resolvers: [postResolvers, commentResolvers],
 });
 
 // Passing an ApolloServer instance to the `startStandaloneServer` function:
@@ -90,6 +96,14 @@ const server = new ApolloServer({
 //  3. prepares your app to handle incoming requests
 const { url } = await startStandaloneServer(server, {
   listen: { port: 4000 },
+  context: () => {
+    return {
+      dataSources: {
+        PostAPI: new PostAPI(),
+        CommentAPI: new CommentAPI(),
+      },
+    };
+  },
 });
 
 console.log(`🚀  Server ready at: ${url}`);

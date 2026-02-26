@@ -2,10 +2,12 @@ import { postData } from "./mockData.js";
 
 export class PostAPI {
   getPosts() {
-    return postData;
+    return fetch("https://dummyjson.com/posts")
+      .then((res) => res.json())
+      .then((data) => data.posts);
   }
 
   getPostById(id) {
-    return postData.find((p) => p.id == id);
+    return fetch(`https://dummyjson.com/posts/${id}`).then((res) => res.json());
   }
 }

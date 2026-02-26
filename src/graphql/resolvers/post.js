@@ -1,14 +1,17 @@
-import { PostAPI } from "../../datasources/postAPI.js";
-
-const postAPI = new PostAPI();
-
-export const resolvers = {
+export const postResolvers = {
   Query: {
-    posts: () => {
-      return postAPI.getPosts();
+    posts: (_, __, { dataSources }) => {
+      return dataSources.PostAPI.getPosts();
     },
-    post: (_, { id }) => {
-      return postAPI.getPostById(id);
+    post: (parent, { id }, { dataSources }, info) => {
+      // console.log(parent, args, contextValue, info);
+      return dataSources.PostAPI.getPostById(id);
+    },
+  },
+  Post: {
+    comments: async (parent, _, { dataSources }) => {
+      const comments = await dataSources.CommentAPI.getComments();
+      return comments.filter((c) => c.postId === parent.id);
     },
   },
 };

@@ -6,14 +6,10 @@ type Post {
   reactions: Reactions
   views: Int
   userId: Int
+  comments: [Comment]
 }
 
 type Reactions {
   likes: Int
   dislikes: Int
-}
-
-type Query {
-  posts: [Post]
-  post(id: ID!): Post
 }

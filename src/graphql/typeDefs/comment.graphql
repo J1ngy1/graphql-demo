@@ -1,15 +1,13 @@
-type CommentUser {
-  id: ID
-  username: String
-}
-
 type Comment {
   id: ID!
-  body: String!
-  postId: Int!
-  user: CommentUser
+  body: String
+  postId: Int
+  likes: Int
+  user: User
 }
 
-extend type Query {
-  comments: [Comment]
+type User {
+  id: ID!
+  username: String
+  fullName: String
 }

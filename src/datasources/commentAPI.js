@@ -1,10 +1,13 @@
-import { RESTDataSource } from "@apollo/datasource-rest";
+export class CommentAPI {
+  getComments() {
+    return fetch("https://dummyjson.com/comments")
+      .then((res) => res.json())
+      .then((data) => data.comments);
+  }
 
-export class CommentAPI extends RESTDataSource {
-  baseURL = "https://dummyjson.com/";
-
-  async getComments() {
-    const response = await this.get("comments");
-    return response.comments;
+  getCommentById(id) {
+    return fetch(`https://dummyjson.com/comment/${id}`).then((res) =>
+      res.json(),
+    );
   }
 }
