@@ -1,0 +1,15 @@
+type CommentUser {
+  id: ID
+  username: String
+}
+
+type Comment {
+  id: ID!
+  body: String!
+  postId: Int!
+  user: CommentUser
+}
+
+extend type Query {
+  comments: [Comment]
+}
